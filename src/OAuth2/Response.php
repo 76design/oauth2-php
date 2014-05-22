@@ -4,15 +4,15 @@ namespace OAuth2;
 
 class Response
 {
-  public $error   = null;
-  public $options = array();
-  
+  public $error     = null;
+  public $parseMode = '';
+
   protected $response = null;
 
-  public function __construct($response, $opts = array())
+  public function __construct($response, $parseMode = 'automatic')
   {
-    $this->response = $response;
-    $this->options  = array_merge(array('parse' => 'automatic'), $opts);
+    $this->response   = $response;
+    $this->parseMode = $parseMode;
   }
 
  /**
@@ -27,24 +27,24 @@ class Response
 
   public function headers()
   {
-    return $this->response->getHeaders()->getAll();
+    return $this->response->getHeaders();
   }
 
   public function status()
   {
     return $this->response->getStatusCode();
   }
-  
+
   public function body()
   {
-    return $this->response->getBody(true);
+    return (string) $this->response->getBody();
   }
 
   public function parse()
   {
     $parsed = null;
 
-    switch ($this->options['parse']) {
+    switch ($this->parseMode) {
       case 'json':
         $parsed = json_decode($this->body(), true);
         break;
@@ -55,11 +55,17 @@ class Response
 
       case 'automatic':
       default:
-        if (in_array($this->content_type(), array('application/json', 'text/javascript'))) {
-          $parsed = json_decode($this->body(), true);
+        $types = array('application/json', 'text/javascript');
+        $content_type = $this->content_type();
+
+        foreach ($types as $type) {
+          if (stripos($content_type, $type) !== false) {
+            $parsed = json_decode($this->body(), true);
+            break;
+          }
         }
 
-        if ($this->content_type() === "application/x-www-form-urlencoded") {
+        if (stripos($content_type, "application/x-www-form-urlencoded") !== false) {
           parse_str($this->body(), $parsed);
         }
         break;
@@ -70,6 +76,6 @@ class Response
 
   public function content_type()
   {
-    return $this->response->getContentType();
+    return $this->response->getHeader('Content-Type');
   }
 }
