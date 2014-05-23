@@ -28,8 +28,8 @@
     }
   , "autoload": {
         "psr-0": {
-            "OAuth2\\Tests": "tests/"
-          , "OAuth2": "src/"
+            "OAuth2\\Client\\Tests": "tests/"
+          , "OAuth2\\Client": "src/"
         }
     }
   , "require-dev": {

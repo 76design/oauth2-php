@@ -1,8 +1,8 @@
 <?php
 
-namespace OAuth2\Strategy;
+namespace OAuth2\Client\Strategy;
 
-class AuthCode extends \OAuth2\Strategy\Base
+class AuthCode extends \OAuth2\Client\Strategy\Base
 {
  /**
   * The required query parameters for the authorize URL

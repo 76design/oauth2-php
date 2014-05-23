@@ -1,6 +1,6 @@
 <?php
 
-namespace OAuth2;
+namespace OAuth2\Client;
 
 class AccessToken
 {
@@ -15,9 +15,9 @@ class AccessToken
  /**
   * Initializes an AccessToken from a Hash
   *
-  * @param  \OAuth2\Client $client The OAuth2::Client instance
+  * @param  \OAuth2\Client\Client $client The OAuth2::Client instance
   * @param  array          $hash   Array of AccessToken property values
-  * @return \OAuth2\AccessToken
+  * @return \OAuth2\Client\AccessToken
   */
   public static function fromHash($client, $hash)
   {
@@ -25,28 +25,28 @@ class AccessToken
     $token = $hash['access_token'];
     unset($hash['access_token']);
 
-    return new \OAuth2\AccessToken($client, $token, $hash);
+    return new \OAuth2\Client\AccessToken($client, $token, $hash);
   }
 
  /**
   * Initializes an AccessToken from a key/value application/x-www-form-urlencoded string
   *
-  * @param  \OAuth2\Client $client The OAuth2::Client instance
+  * @param  \OAuth2\Client\Client $client The OAuth2::Client instance
   * @param  string         $kvform The application/x-www-form-urlencoded string
-  * @return \OAuth2\AccessToken
+  * @return \OAuth2\Client\AccessToken
   */
   public static function fromKvform($client, $kvform)
   {
     // Parse key/value application/x-www-form-urlencoded string into a hash
     parse_str($kvform, $hash);
 
-    return \OAuth2\AccessToken::fromHash($client, $hash);
+    return \OAuth2\Client\AccessToken::fromHash($client, $hash);
   }
   
  /**
   * Creates an AccessToken
   *
-  * @param \OAuth2\Client $client The OAuth2::Client instance
+  * @param \OAuth2\Client\Client $client The OAuth2::Client instance
   * @param string         $token  The Access Token value
   * @param array          $opts   The options to create the Access Token with
   */
@@ -86,7 +86,7 @@ class AccessToken
  /**
   * client getter
   *
-  * @return OAuth2\Client
+  * @return \OAuth2\Client\Client
   */
   public function getClient()
   {
@@ -232,7 +232,7 @@ class AccessToken
   * Refreshes the current Access Token
   *
   * @param  array               $params
-  * @return \OAuth2\AccessToken $new_token
+  * @return \OAuth2\Client\AccessToken $new_token
   */
   public function refresh($params = array())
   {

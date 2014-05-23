@@ -2,6 +2,9 @@
 .DS_Store
 *.sw[a-z]
 
+.idea
+*.iml
+
 # Ignore potentially sensitive phpunit file
 phpunit.xml
 

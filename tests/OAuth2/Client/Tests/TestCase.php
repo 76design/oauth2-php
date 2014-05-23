@@ -1,6 +1,6 @@
 <?php
 
-namespace OAuth2\Tests;
+namespace OAuth2\Client\Tests;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -10,12 +10,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
   * @param  string        $client_id     The client ID
   * @param  string        $client_secret The client secret
   * @param  array         $opts          An array of additionnal options
-  * @return OAuth2\Client $client        The stubbed client
+  * @return OAuth2\Client\Client $client        The stubbed client
   */
   public function getClientStub($client_id, $client_secret, $opts = array())
   {
     // create a client stub
-    $client = $this->getMock('\OAuth2\Client', ['getResponse'], [$client_id, $client_secret, $opts]);
+    $client = $this->getMock('\OAuth2\Client\Client', ['getResponse'], [$client_id, $client_secret, $opts]);
 
     // configure client stub
     $client->expects($this->any())

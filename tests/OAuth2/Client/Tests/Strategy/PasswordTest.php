@@ -1,8 +1,8 @@
 <?php
 
-namespace OAuth2\Tests\Strategy;
+namespace OAuth2\Client\Tests\Strategy;
 
-class PasswordTest extends \OAuth2\Tests\TestCase
+class PasswordTest extends \OAuth2\Client\Tests\TestCase
 {
   protected $access   = null;
   protected $client   = null;
@@ -18,7 +18,7 @@ class PasswordTest extends \OAuth2\Tests\TestCase
     $this->client = $this->getClientStub('abc', 'def', array('site' => 'https://api.example.com'));
 
     // create password
-    $this->password = new \OAuth2\Strategy\Password($this->client);
+    $this->password = new \OAuth2\Client\Strategy\Password($this->client);
   }
 
   protected function tearDown()
@@ -30,7 +30,7 @@ class PasswordTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Strategy\Password::authorize_url()
+  * @covers OAuth2\Client\Strategy\Password::authorize_url()
   */
   public function testAuthorizeUrl()
   {
@@ -39,7 +39,7 @@ class PasswordTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Strategy\Password::get_token()
+  * @covers OAuth2\Client\Strategy\Password::get_token()
   */
   public function testGetToken()
   {
@@ -63,7 +63,7 @@ class PasswordTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * Intercept all OAuth2\Client::getResponse() calls and mock their responses
+  * Intercept all OAuth2\Client\Client::getResponse() calls and mock their responses
   */
   public function mockGetResponse()
   {
@@ -76,6 +76,6 @@ class PasswordTest extends \OAuth2\Tests\TestCase
       , 'json'          => new \GuzzleHttp\Message\Response(200, array('Content-Type' => 'application/json'), \GuzzleHttp\Stream\Stream::factory('{"expires_in":600,"access_token":"salmon","refresh_token":"trout"}'))
     );
 
-    return new \OAuth2\Response($map[$this->mode]);
+    return new \OAuth2\Client\Response($map[$this->mode]);
   }
 }

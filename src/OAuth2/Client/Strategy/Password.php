@@ -1,8 +1,8 @@
 <?php
 
-namespace OAuth2\Strategy;
+namespace OAuth2\Client\Strategy;
 
-class Password extends \OAuth2\Strategy\Base
+class Password extends \OAuth2\Client\Strategy\Base
 {
  /**
   * Not used for this strategy

@@ -1,19 +1,19 @@
 <?php
 
-namespace OAuth2\Tests;
+namespace OAuth2\Client\Tests;
 
-class ResponseTest extends \OAuth2\Tests\TestCase
+class ResponseTest extends \OAuth2\Client\Tests\TestCase
 {
  /**
-  * @var OAuth2\Response
+  * @var OAuth2\Client\Response
   */
   protected $response;
 
  /**
-  * @covers OAuth2\Response::__construct()
-  * @covers OAuth2\Response::headers()
-  * @covers OAuth2\Response::status()
-  * @covers OAuth2\Response::body()
+  * @covers OAuth2\Client\Response::__construct()
+  * @covers OAuth2\Client\Response::headers()
+  * @covers OAuth2\Client\Response::status()
+  * @covers OAuth2\Client\Response::body()
   */
   public function testConstructorBuildsResponse()
   {
@@ -22,7 +22,7 @@ class ResponseTest extends \OAuth2\Tests\TestCase
     $body    = 'foo';
 
     // returns the status, headers and body
-    $this->response = new \OAuth2\Response(new \GuzzleHttp\Message\Response($status, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
+    $this->response = new \OAuth2\Client\Response(new \GuzzleHttp\Message\Response($status, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
     $responseHeaders = $this->response->headers();
     $this->assertCount(1, $responseHeaders);
     $this->assertArrayHasKey('foo', $responseHeaders);
@@ -32,15 +32,15 @@ class ResponseTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Response::content_type()
-  * @covers OAuth2\Response::parse()
+  * @covers OAuth2\Client\Response::content_type()
+  * @covers OAuth2\Client\Response::parse()
   */
   public function testParseResponse()
   {
     // parses application/x-www-form-urlencoded body
     $headers        = array('Content-Type' => 'application/x-www-form-urlencoded');
     $body           = 'foo=bar&answer=42';
-    $this->response = new \OAuth2\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
+    $this->response = new \OAuth2\Client\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
     $parsedResponse = $this->response->parse();
     $this->assertEquals(2, count(array_keys($parsedResponse)));
     $this->assertEquals('bar', $parsedResponse['foo']);
@@ -49,7 +49,7 @@ class ResponseTest extends \OAuth2\Tests\TestCase
     // parses application/json body
     $headers        = array('Content-Type' => 'application/json');
     $body           = json_encode(array('foo' => 'bar', 'answer' => 42));
-    $this->response = new \OAuth2\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
+    $this->response = new \OAuth2\Client\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
     $parsedResponse = $this->response->parse();
     $this->assertEquals(2, count(array_keys($parsedResponse)));
     $this->assertEquals('bar', $parsedResponse['foo']);
@@ -58,7 +58,7 @@ class ResponseTest extends \OAuth2\Tests\TestCase
     // doesn't try to parse other content-types
     $headers        = array('Content-Type' => 'text/html');
     $body           = '<!DOCTYPE html><html><head></head><body></body></html>';
-    $this->response = new \OAuth2\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
+    $this->response = new \OAuth2\Client\Response(new \GuzzleHttp\Message\Response(200, $headers, \GuzzleHttp\Stream\Stream::factory($body)));
     $this->assertNull($this->response->parse());
   }
 }

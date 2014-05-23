@@ -1,11 +1,11 @@
 <?php
 
-namespace OAuth2\Tests;
+namespace OAuth2\Client\Tests;
 
-class ClientTest extends \OAuth2\Tests\TestCase
+class ClientTest extends \OAuth2\Client\Tests\TestCase
 {
  /**
-  * @var OAuth2\Client
+  * @var OAuth2\Client\Client
   * @var string
   * @var string
   */
@@ -29,7 +29,7 @@ class ClientTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Client::__construct()
+  * @covers OAuth2\Client\Client::__construct()
   */
   public function testConstructorBuildsClient()
   {
@@ -47,27 +47,27 @@ class ClientTest extends \OAuth2\Tests\TestCase
     $this->assertTrue($this->client->options['request_opts']['exceptions']);
 
     // allows true/false exceptions in request_opts
-    $client = new \OAuth2\Client('abc', 'def', [
+    $client = new \OAuth2\Client\Client('abc', 'def', [
         'site'         => 'https://api.example.com'
       , 'request_opts' => [ 'exceptions' => false ]
     ]);
     $this->assertFalse($client->options['request_opts']['exceptions']);
-    $client = new \OAuth2\Client('abc', 'def', [
+    $client = new \OAuth2\Client\Client('abc', 'def', [
         'site'         => 'https://api.example.com'
       , 'request_opts' => [ 'exceptions' => true ]
     ]);
     $this->assertTrue($client->options['request_opts']['exceptions']);
 
     // allow GET/POST for token_method option
-    $client = new \OAuth2\Client('abc', 'def', array('site' => 'https://api.example.com', 'token_method' => 'GET'));
+    $client = new \OAuth2\Client\Client('abc', 'def', array('site' => 'https://api.example.com', 'token_method' => 'GET'));
     $this->assertEquals('GET', $client->options['token_method']);
-    $client = new \OAuth2\Client('abc', 'def', array('site' => 'https://api.example.com', 'token_method' => 'POST'));
+    $client = new \OAuth2\Client\Client('abc', 'def', array('site' => 'https://api.example.com', 'token_method' => 'POST'));
     $this->assertEquals('POST', $client->options['token_method']);
   }
 
  /**
-  * @covers OAuth2\Client::authorize_url()
-  * @covers OAuth2\Client::token_url()
+  * @covers OAuth2\Client\Client::authorize_url()
+  * @covers OAuth2\Client\Client::token_url()
   */
   public function testUrlsEnpoints()
   {
@@ -86,7 +86,7 @@ class ClientTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Client::getResponse()
+  * @covers OAuth2\Client\Client::getResponse()
   */
   public function testGetResponse()
   {
@@ -147,15 +147,15 @@ class ClientTest extends \OAuth2\Tests\TestCase
       $request = $this->client->createRequest('GET', $errorPath);
 
       // throw OAuth\Error on error response to path {$errorPath}
-      $this->setExpectedException('\OAuth2\Error');
+      $this->setExpectedException('\OAuth2\Client\Error');
       $this->client->getResponse($request);
     }
 
-    // parses OAuth2 standard error response
+    // parses OAuth2\Client standard error response
     try {
       $request = $this->client->createRequest('GET', '/error');
       $this->client->getResponse($request);
-    } catch (\OAuth2\Error $e) {
+    } catch (\OAuth2\Client\Error $e) {
       $this->assertEquals($this->errorValue, $e->getCode());
       $this->assertEquals($this->errorDescriptionValue, $e->getDescription());
     }
@@ -164,22 +164,22 @@ class ClientTest extends \OAuth2\Tests\TestCase
     try {
       $request = $this->client->createRequest('GET', '/error');
       $this->client->getResponse($request);
-    } catch (\OAuth2\Error $e) {
+    } catch (\OAuth2\Client\Error $e) {
       $this->assertNotNull($e->getResponse());
     }
   }
 
  /**
-  * @covers OAuth2\Client::auth_code()
+  * @covers OAuth2\Client\Client::auth_code()
   */
   public function testAuthCodeInstatiation()
   {
     // auth_code() should instantiate a AuthCode strategy with this client
-    $this->assertInstanceOf("\OAuth2\Strategy\AuthCode", $this->client->authCode());
+    $this->assertInstanceOf("\OAuth2\Client\Strategy\AuthCode", $this->client->authCode());
   }
 
  /**
-  * Intercept all OAuth2\Client::getResponse() calls and mock their responses
+  * Intercept all OAuth2\Client\Client::getResponse() calls and mock their responses
   */
   public function mockGetResponse()
   {
@@ -201,8 +201,8 @@ class ClientTest extends \OAuth2\Tests\TestCase
     // match response
     $response = $map[$args[0]->getMethod()][$args[0]->getPath()];
 
-    // wrap response in an OAuth2\Response object
-    $response = new \OAuth2\Response(new \GuzzleHttp\Message\Response($response['status'], $response['headers'], \GuzzleHttp\Stream\Stream::factory($response['body'])), $args[1]);
+    // wrap response in an OAuth2\Client\Response object
+    $response = new \OAuth2\Client\Response(new \GuzzleHttp\Message\Response($response['status'], $response['headers'], \GuzzleHttp\Stream\Stream::factory($response['body'])), $args[1]);
 
     // handle response
     if (in_array($response->status(), range(200, 299))) {
@@ -224,14 +224,14 @@ class ClientTest extends \OAuth2\Tests\TestCase
       $request = $this->client->createRequest($method, $location[0], [ 'body' => $response->body() ]);
       return $this->client->getResponse($request);
     } else if (in_array($response->status(), range(400, 599))) {
-      $e = new \OAuth2\Error($response);
+      $e = new \OAuth2\Client\Error($response);
       if ($args[0]->getConfig()['exceptions'] || $this->client->options['request_opts']['exceptions']) {
         throw $e;
       }
       $response->error = $e;
       return $response;
     } else {
-      throw new \OAuth2\Error($response);
+      throw new \OAuth2\Client\Error($response);
     }
   }
 }

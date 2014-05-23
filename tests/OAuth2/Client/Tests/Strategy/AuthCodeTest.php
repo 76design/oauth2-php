@@ -1,8 +1,8 @@
 <?php
 
-namespace OAuth2\Tests\Strategy;
+namespace OAuth2\Client\Tests\Strategy;
 
-class AuthCodeTest extends \OAuth2\Tests\TestCase
+class AuthCodeTest extends \OAuth2\Client\Tests\TestCase
 {
   protected $access        = null;
   protected $authCode      = null;
@@ -25,7 +25,7 @@ class AuthCodeTest extends \OAuth2\Tests\TestCase
     $this->client = $this->getClientStub('abc', 'def', array('site' => 'https://api.example.com'));
 
     // create authCode
-    $this->authCode = new \OAuth2\Strategy\AuthCode($this->client);
+    $this->authCode = new \OAuth2\Client\Strategy\AuthCode($this->client);
   }
 
   protected function tearDown()
@@ -40,7 +40,7 @@ class AuthCodeTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Strategy\AuthCode::authorize_url()
+  * @covers OAuth2\Client\Strategy\AuthCode::authorize_url()
   */
   public function testAuthorizeUrl()
   {
@@ -56,7 +56,7 @@ class AuthCodeTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * @covers OAuth2\Strategy\AuthCode::get_token()
+  * @covers OAuth2\Client\Strategy\AuthCode::get_token()
   */
   public function testGetToken()
   {
@@ -88,7 +88,7 @@ class AuthCodeTest extends \OAuth2\Tests\TestCase
   }
 
  /**
-  * Intercept all OAuth2\Client::getResponse() calls and mock their responses
+  * Intercept all OAuth2\Client\Client::getResponse() calls and mock their responses
   */
   public function mockGetResponse()
   {
@@ -101,6 +101,6 @@ class AuthCodeTest extends \OAuth2\Tests\TestCase
       , 'json'          => new \GuzzleHttp\Message\Response(200, array('Content-Type' => 'application/json'), \GuzzleHttp\Stream\Stream::factory($this->jsonToken))
     );
 
-    return new \OAuth2\Response($map[$this->mode]);
+    return new \OAuth2\Client\Response($map[$this->mode]);
   }
 }

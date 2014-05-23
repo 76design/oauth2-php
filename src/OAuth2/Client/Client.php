@@ -1,6 +1,6 @@
 <?php
 
-namespace OAuth2;
+namespace OAuth2\Client;
 
 class Client
 {
@@ -106,11 +106,11 @@ class Client
   *
   * @param  \GuzzleHttp\Message\Request $request   The request object
   * @param  string                      $parseMode The mode of parsing for the response
-  * @return \OAuth2\Response
+  * @return \OAuth2\Client\Response
   */
   public function getResponse($request, $parseMode = 'automatic')
   {
-    return new \OAuth2\Response($this->connection->send($request), $parseMode);
+    return new \OAuth2\Client\Response($this->connection->send($request), $parseMode);
   }
 
  /**
@@ -118,7 +118,7 @@ class Client
   *
   * @param  array $params An array of params for the token endpoint
   * @param  array $access Token options, to pass to the AccessToken object
-  * @return \OAuth2\AccessToken
+  * @return \OAuth2\Client\AccessToken
   */
   public function getToken($params = array(), $tokenOpts = array())
   {
@@ -164,32 +164,32 @@ class Client
     // Handle response
     $parsedResponse = $response->parse();
     if (!is_array($parsedResponse) && !isset($parsedResponse['access_token'])) {
-      throw new \OAuth2\Error($response);
+      throw new \OAuth2\Client\Error($response);
     }
 
     // Return access token
-    return \OAuth2\AccessToken::fromHash($this, array_merge($parsedResponse, $tokenOpts));
+    return \OAuth2\Client\AccessToken::fromHash($this, array_merge($parsedResponse, $tokenOpts));
   }
 
  /**
   * The Authorization Code strategy
   *
-  * @return \OAuth2\Strategy\AuthCode
+  * @return \OAuth2\Client\Strategy\AuthCode
   */
   public function authCode()
   {
-    $this->authCode = isset($this->authCode) ? $this->authCode : new \OAuth2\Strategy\AuthCode($this);
+    $this->authCode = isset($this->authCode) ? $this->authCode : new \OAuth2\Client\Strategy\AuthCode($this);
     return $this->authCode;
   }
 
  /**
   * The Resource Owner Password Credentials strategy
   *
-  * @return \OAuth2\Strategy\Password
+  * @return \OAuth2\Client\Strategy\Password
   */
   public function password()
   {
-    $this->password = isset($this->password) ? $this->password : new \OAuth2\Strategy\Password($this);
+    $this->password = isset($this->password) ? $this->password : new \OAuth2\Client\Strategy\Password($this);
     return $this->password;
   }
 }
