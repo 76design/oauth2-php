@@ -1,9 +1,9 @@
 {
-    "name": "keeguon/oauth2-php"
+    "name": "76design/oauth2-php"
   , "type": "library"
   , "description": "A library to consume services using the OAuth 2 security scheme."
   , "keywords": ["oauth2"]
-  , "homepage": "https://github.com/Keeguon/oauth2-php"
+  , "homepage": "https://github.com/76design/oauth2-php"
   , "version": "1.3.5"
   , "license": "MIT"
   , "authors": [
